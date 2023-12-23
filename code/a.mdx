@@ -1,0 +1,24 @@
+
+### Code Block
+```
+private static getPortfolioAnalyticsDetailsForPortfolioAndAccount(analyticsTradeToolList: IAnalyticsTradeToolList[]): IPortfolioAnalytics[] {
+    const portfolioAnalytics = [] as IPortfolioAnalytics[];
+    for (const tradeToolElement of analyticsTradeToolList) {
+      if (tradeToolElement?.needAnalytics !== undefined) {
+        const portfolioAnalytic = {
+          failedReason: tradeToolElement.failedReason,
+          needAnalytics: tradeToolElement.needAnalytics,
+          portfolioId: tradeToolElement.portfolioId ? tradeToolElement.portfolioId : tradeToolElement.id,
+          editedDate: tradeToolElement.analyticsEditedDate,
+        } as IPortfolioAnalytics;
+        const portfolioFlags = this.getPortfolioFlagObjects([portfolioAnalytic], portfolioAnalytics);
+        portfolioAnalytics.push(...portfolioFlags);
+      }
+    }
+    return portfolioAnalytics;
+  }
+
+  private static getPortfolioFlagObjects(portfolioFlags: IPortfolioAnalytics[], portfolioAnalytics: IPortfolioAnalytics[]): IPortfolioAnalytics[] {
+    const portfolioAnalyticsSet = new Set(portfolioAnalytics.map(portfolio => portfolio.portfolioId));
+    return portfolioFlags.filter(portfolioFlag => !portfolioAnalyticsSet.has(portfolioFlag.portfolioId));
+  }```
